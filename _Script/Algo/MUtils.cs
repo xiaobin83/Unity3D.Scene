@@ -126,6 +126,36 @@ namespace scene
 			return minAxis;
 		}
 
+		/* parameter s:
+		 * 
+		 *                   6
+		 *         +-----+-----+
+		 *        /|  7 /|  6 /|
+		 *       +-----+-----+ +
+		 *      /|  4 /|/ 5 /|/|           | /                      /
+		 *     +-----+-----+ + +          3|/ 2                  7 / 6
+		 *     |/    |/    |/|/ 2     -----+----- bottom     -----+----- top
+		 *     +-----+-----+ +          0 / 1                  4 /| 5
+		 *     |     |/    |/ 1          /                      / |
+		 *     +-----+-----+
+		 *        0
+		 *     
+		 */
+
+		public static Bounds OctTree_GetSubBounds(Bounds bounds, int s, float loose = 0f)
+		{
+			return bounds;
+		}
+
+
+		/* parameter s:
+		 * 		+---+---+
+		 * 		| 3 | 2 |
+		 * 		+---+---+
+		 * 		| 0 | 1 |
+		 * 		+---+---+
+		 */
+
 		public static Bounds QuadTree_GetSubBounds(Bounds bounds, int s, float loose = 0f)
 		{
 			Vector3 bm = bounds.min;
@@ -158,13 +188,7 @@ namespace scene
 			return nb;
 		}
 
-		/* 
-		 * +---+---+
-		 * | 3 | 2 |
-		 * +---+---+
-		 * | 0 | 1 |
-		 * +---+---+
-		 */
+
 
 		public static bool QuadTree_IsBoundsInSub(Bounds bounds, int s, Bounds boundsToTest, float loose = 0f)
 		{

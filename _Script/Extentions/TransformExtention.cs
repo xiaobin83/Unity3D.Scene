@@ -8,12 +8,16 @@ namespace scene
 	{
 		public static void DestoryChildren(this Transform target)
 		{
-			var chs = new List<Transform>();
+			var chs = new List<GameObject>();
 			for (int i = 0; i < target.childCount; ++i)
 			{
-				GameObject.Destroy(target.GetChild(i).gameObject);
+				chs.Add(target.GetChild(i).gameObject);
 			}
 			target.DetachChildren();
+			foreach (var ch in chs)
+			{
+				GameObject.Destroy(ch);
+			}
 		}
 	}
 

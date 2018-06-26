@@ -95,10 +95,10 @@ namespace scene
 			Func<int, int, int, Vertex, Vertex, Vertex, bool> clip = delegate (int kr0, int kr1, int kr2, Vertex pt0, Vertex pt1, Vertex pt2)
 			{
 				if (kr0 > 0) // p0 at positive side
-			{
+				{
 					float enter;
 					if (kr1 < 0 && kr2 < 0) // other two on nagetive plane
-				{
+					{
 						var r = new Ray(pt0.vertex, pt1.vertex - pt0.vertex);
 						inPlane.Raycast(r, out enter);
 						var t0 = r.GetPoint(enter);

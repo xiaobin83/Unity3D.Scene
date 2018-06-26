@@ -134,7 +134,7 @@ namespace scene
 			}
 		}
 
-		public TriangleQuadTree qt { get; private set; }
+		public TriangleQuadtree qt { get; private set; }
 
 		void Awake()
 		{
@@ -157,7 +157,7 @@ namespace scene
 			Bounds bounds;
 			if (gameObject.GetBoundsOfCollider<MeshCollider>(out bounds))
 			{
-				qt = new TriangleQuadTree(bounds, TriangleQuadTree.kDefaultCellSize);
+				qt = new TriangleQuadtree(bounds, TriangleQuadtree.kDefaultCellSize);
 				var mcs = GetComponentsInChildren<MeshCollider>();
 				foreach (var mc in mcs)
 				{

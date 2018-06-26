@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace scene
 {
 
-	public class GenericQuadTree<T>
+	public class GenericQuadtree<T>
 	{
 		public const int kMaxDepth = 4;
 
@@ -148,7 +148,7 @@ namespace scene
 			get; private set;
 		}
 
-		public GenericQuadTree(Bounds inBounds, float inMinCellSize, float inLoose = 0f)
+		public GenericQuadtree(Bounds inBounds, float inMinCellSize, float inLoose = 0f)
 		{
 			loose = inLoose;
 			minCellSize = inMinCellSize;

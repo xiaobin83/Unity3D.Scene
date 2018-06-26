@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace scene
 {
 
-	public class TriangleQuadTree : GenericQuadTree<int>
+	public class TriangleQuadtree : GenericQuadtree<int>
 	{
 		public const float kDefaultCellSize = 5f;
 
@@ -29,7 +29,7 @@ namespace scene
 			get; private set;
 		}
 
-		public TriangleQuadTree(Bounds inBounds, float inMinCellSize)
+		public TriangleQuadtree(Bounds inBounds, float inMinCellSize)
 			: base(inBounds, inMinCellSize)
 		{
 			verts = new List<Vertex>();
