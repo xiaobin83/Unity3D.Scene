@@ -68,7 +68,7 @@ namespace scene
 			var decal = target as Decal;
 			var ds = decal.GetComponentInParent<DecalSystem>();
 
-			if (Event.current.type == EventType.mouseDrag
+			if (Event.current.type == EventType.MouseDrag
 				&& Event.current.button == 0)
 			{
 				dragging = true;
@@ -76,7 +76,7 @@ namespace scene
 			if (dragging)
 			{
 				decal.showDecalMesh = false;
-				if (Event.current.type == EventType.mouseUp
+				if (Event.current.type == EventType.MouseUp
 					&& Event.current.button == 0)
 				{
 					dragging = false;

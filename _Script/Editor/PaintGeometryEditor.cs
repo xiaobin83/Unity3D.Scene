@@ -168,7 +168,7 @@ namespace scene
 
 			switch (Event.current.type)
 			{
-				case EventType.mouseDown:
+				case EventType.MouseDown:
 					if (Event.current.button == 0)
 					{
 						GUIUtility.hotControl = controlId;
@@ -176,7 +176,7 @@ namespace scene
 						Event.current.Use();
 					}
 					break;
-				case EventType.mouseUp:
+				case EventType.MouseUp:
 					if (Event.current.button == 0)
 					{
 						GUIUtility.hotControl = 0;

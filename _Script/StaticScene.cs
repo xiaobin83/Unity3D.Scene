@@ -820,7 +820,7 @@ namespace scene
 				mesh.colors32 = newColors32;  // convert to color32
 				mesh.triangles = newTriangles;
 				mesh.RecalculateBounds();
-				mesh.Optimize();
+				;
 
 				constructed = true;
 			}
@@ -953,7 +953,7 @@ namespace scene
 					}
 					bakedMesh.SetIndices(newIndices.ToArray(), topo, 0);
 
-					bakedMesh.Optimize();
+					;
 
 					// create new object
 					var newGo = new GameObject(go.name + "_sub_" + s);
@@ -1249,7 +1249,7 @@ namespace scene
 
 		public void Compile(string savePath)
 		{
-			var trans = transform.FindChild(kBatchedRoot);
+			var trans = transform.Find(kBatchedRoot);
 			if (trans != null)
 			{
 				DestroyImmediate(trans.gameObject);

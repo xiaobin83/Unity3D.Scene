@@ -179,7 +179,7 @@ namespace scene
 				Handles.color = Color.green;
 				Handles.DrawWireDisc(hit.point, hit.normal, ds.size * 0.5f);
 
-				if (Event.current.type == EventType.mouseDown
+				if (Event.current.type == EventType.MouseDown
 					&& Event.current.button == 0)
 				{
 					GUIUtility.hotControl = controlId;
@@ -201,7 +201,7 @@ namespace scene
 				}
 			}
 
-			if (Event.current.type == EventType.mouseUp
+			if (Event.current.type == EventType.MouseUp
 				&& Event.current.button == 0)
 			{
 				GUIUtility.hotControl = 0;
