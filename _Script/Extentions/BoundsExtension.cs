@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace scene
+namespace x600d1dea.scene
 {
 	public static class BoundsExtension
 	{

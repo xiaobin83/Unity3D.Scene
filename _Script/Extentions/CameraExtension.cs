@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace scene
+namespace x600d1dea.scene
 {
 	public static class CameraExtensions
 	{
@@ -33,23 +33,23 @@ namespace scene
 			Line L3;
 			MUtils.Intersects(planes[3], plane, out L3);
 
-			Line2d l2d0 = MUtils.MappingAxis.Map(L0);
-			Line2d l2d1 = MUtils.MappingAxis.Map(L1);
-			Line2d l2d2 = MUtils.MappingAxis.Map(L2);
-			Line2d l2d3 = MUtils.MappingAxis.Map(L3);
+			Line2D l2d0 = MappingAxis.Map(L0);
+			Line2D l2d1 = MappingAxis.Map(L1);
+			Line2D l2d2 = MappingAxis.Map(L2);
+			Line2D l2d3 = MappingAxis.Map(L3);
 
 			float s, t;
 			l2d0.Intersects(l2d2, out t, out s);
-			Vector3 rightTop = MUtils.MappingAxis.Map(l2d0.GetPoint(t));
+			Vector3 rightTop = MappingAxis.Map(l2d0.GetPoint(t));
 
 			l2d0.Intersects(l2d3, out t, out s);
-			Vector3 rightBottom = MUtils.MappingAxis.Map(l2d0.GetPoint(t));
+			Vector3 rightBottom = MappingAxis.Map(l2d0.GetPoint(t));
 
 			l2d1.Intersects(l2d2, out t, out s);
-			Vector3 leftTop = MUtils.MappingAxis.Map(l2d1.GetPoint(t));
+			Vector3 leftTop = MappingAxis.Map(l2d1.GetPoint(t));
 
 			l2d1.Intersects(l2d3, out t, out s);
-			Vector3 leftBottom = MUtils.MappingAxis.Map(l2d1.GetPoint(t));
+			Vector3 leftBottom = MappingAxis.Map(l2d1.GetPoint(t));
 
 			return new Vector3[] { leftTop, rightTop, rightBottom, leftBottom };
 		}

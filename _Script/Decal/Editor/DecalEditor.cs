@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace scene
+namespace x600d1dea.scene
 {
 	[CustomEditor(typeof(Decal))]
 	public class DecalEditor : Editor

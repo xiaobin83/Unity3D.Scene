@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace scene
+namespace x600d1dea.scene
 {
 
-	public struct Bounds2d
+	public struct Bounds2D
 	{
 		public Vector2 min;
 		public Vector2 max;
@@ -16,20 +16,20 @@ namespace scene
 			}
 		}
 
-		public Bounds2d(Vector2 inMin, Vector2 inMax)
+		public Bounds2D(Vector2 inMin, Vector2 inMax)
 		{
 			min = new Vector2(Mathf.Min(inMin.x, inMax.x), Mathf.Min(inMin.y, inMax.y));
 			max = new Vector2(Mathf.Max(inMin.x, inMax.x), Mathf.Max(inMin.y, inMax.y));
 		}
 
-		public static Bounds2d FromBounds(Bounds bounds)
+		public static Bounds2D FromBounds(Bounds bounds)
 		{
-			return new Bounds2d(
-				MUtils.MappingAxis.Map(bounds.min),
-				MUtils.MappingAxis.Map(bounds.max));
+			return new Bounds2D(
+				MappingAxis.Map(bounds.min),
+				MappingAxis.Map(bounds.max));
 		}
 
-		public bool Intersects(LineSegment2d seg, out float t0, out float t1, out float t2, out float t3)
+		public bool Intersects(LineSegment2D seg, out float t0, out float t1, out float t2, out float t3)
 		{
 			if (Intersects(seg.line, out t0, out t1, out t2, out t3))
 			{
@@ -39,9 +39,9 @@ namespace scene
 			return false;
 		}
 
-		public bool Intersects(Line2d line, out float t0, out float t1, out float t2, out float t3)
+		public bool Intersects(Line2D line, out float t0, out float t1, out float t2, out float t3)
 		{
-			List<LineSegment2d> segs = LineSegment2d.FromBounds(this);
+			List<LineSegment2D> segs = LineSegment2D.FromBounds(this);
 
 			t0 = t1 = t2 = t3 = 0f;
 

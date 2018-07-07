@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace scene
+namespace x600d1dea.scene
 {
 	public struct Triangle
 	{

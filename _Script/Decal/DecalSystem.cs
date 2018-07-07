@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 
 
-namespace scene
+namespace x600d1dea.scene
 {
 	[RequireComponent(typeof(MeshCollider)), ExecuteInEditMode]
 	public class DecalSystem : MonoBehaviour

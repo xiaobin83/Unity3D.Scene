@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // loose quad tree
 // on XZ-plane
 
-namespace scene
+namespace x600d1dea.scene
 {
 
 	public class GenericQuadtree<T>

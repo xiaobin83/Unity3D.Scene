@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using scene;
 
-namespace scene
+namespace x600d1dea.scene
 {
-
 	public static class MUtils
 	{
 
@@ -57,6 +57,7 @@ namespace scene
 				}
 			}
 		}
+
 
 		public static bool Intersects(Plane a, Plane b, out Line line)
 		{
@@ -201,47 +202,20 @@ namespace scene
 			}
 			return true;
 		}
+		public static readonly Bounds emptyBounds = new Bounds();
 
-
-		public class MappingAxis
+		public static Bounds GetBounds(Vector2[] verts)
 		{
-			public enum Plane
+			if (verts.Length > 0)
 			{
-				XZ = 0,
-				XY,
-				YZ
+				var b = new Bounds(verts[0], Vector3.zero);
+				for (int i = 1; i < verts.Length; ++i)
+				{
+					b.Encapsulate(verts[i]);
+				}
+				return b;
 			}
-
-			public static Plane mappingPlane = Plane.XZ;
-
-			static int[] mappingX = new int[] { 0, 0, 1 };
-			static int[] mappingY = new int[] { 2, 1, 2 };
-
-			public static Vector2 Map(Vector3 p)
-			{
-				return new Vector2(p[mappingX[(int)mappingPlane]], p[mappingY[(int)mappingPlane]]);
-			}
-
-			public static Vector3 Map(Vector2 p)
-			{
-				Vector3 ret = new Vector3(0f, 0f, 0f);
-				ret[mappingX[(int)mappingPlane]] = p.x;
-				ret[mappingY[(int)mappingPlane]] = p.y;
-				return ret;
-			}
-			public static Line2d Map(Line L)
-			{
-				return new Line2d(Map(L.P), Map(L.D));
-			}
-
-			public static void SetPosition(ref Vector3 p0, Vector3 p1)
-			{
-				Vector2 pp1 = Map(p1);
-				p0[mappingX[(int)mappingPlane]] = pp1.x;
-				p0[mappingY[(int)mappingPlane]] = pp1.y;
-			}
+			return emptyBounds;
 		}
-
 	}
-
 }
