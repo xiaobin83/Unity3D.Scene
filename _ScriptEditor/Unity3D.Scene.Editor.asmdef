@@ -1,0 +1,13 @@
+{
+    "name": "Unity3D.Scene.Editor",
+    "references": [
+        "Unity3D.Scene",
+        "Unity3D.Stubs"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using x600d1dea.stubs.utils;
 
 namespace x600d1dea.scene
 {
@@ -92,12 +93,12 @@ namespace x600d1dea.scene
 			{
 				if (GUILayout.Button("Update Decal Meshes"))
 				{
-					EditorUtils.CheckAndCreateDirectroy(storePath);
+					System.IO.Directory.CreateDirectory(storePath);
 					ds.UpdateAndSaveDecalMeshes(storePath);
 				}
 				if (GUILayout.Button("Save Decal Meshes"))
 				{
-					EditorUtils.CheckAndCreateDirectroy(storePath);
+					System.IO.Directory.CreateDirectory(storePath);
 					ds.SaveDecalMeshes(storePath);
 				}
 			}

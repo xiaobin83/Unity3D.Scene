@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEditor;
 
-namespace scene
+namespace x600d1dea.scene
 {
 	[CustomEditor(typeof(TiledBackground))]
 	public class TiledBackgroundEditor : Editor

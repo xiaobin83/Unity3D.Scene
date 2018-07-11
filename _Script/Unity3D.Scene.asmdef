@@ -1,0 +1,10 @@
+{
+    "name": "Unity3D.Scene",
+    "references": [
+        "Unity3D.Stubs"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

@@ -25,10 +25,18 @@ namespace x600d1dea.scene
 			public int pixelSize = 1;
 			public Pixel[] pixels; // todo: pooled
 
+			/*
+				   . v0
+				  / \
+			  v1 /___\ v2
+
+			 */
 			void BlitUpperTriangle(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 uv0, Vector2 uv1, Vector2 uv2, int minX, int minY) 
 			{
 
+
 			}
+
 			void BlitLowerTriangle(Vector2 v0, Vector2 v1, Vector2 v2, Vector2 uv0, Vector2 uv1, Vector2 uv2, int minX, int minY) 
 			{
 
@@ -109,8 +117,10 @@ namespace x600d1dea.scene
 				}
 				else
 				{
-					Vector2 v3 = Vector2.zero;
-					Vector2 uv3 = Vector2.zero;
+					var y = v1.y;
+					var x = Mathf.Floor(v0.x - (v0.y - y)/(v0.y - v2.y)*(v0.x - v2.x));
+					var v3 = new Vector2(x, y);
+					var uv3 = uv2 + (uv1 - uv2) * (v3 - v2).magnitude / (v0 - v2).magnitude;
 					BlitUpperTriangle(v0, v1, v3, uv0, uv1, uv3, minX, minY);
 					BlitLowerTriangle(v1, v3, v2, uv0, uv3, uv2, minX, minY);
 				}
@@ -122,21 +132,10 @@ namespace x600d1dea.scene
 				for (int i = 0; i < verts.Length; ++i)
 				{
 					var v = verts[i];
-					v.x = Mathf.Floor(v.x / pixelSize);
-					v.y = Mathf.Floor(v.y / pixelSize);
+					v.x = v.x / pixelSize;
+					v.y = v.y / pixelSize;
 					verts[i] = v;
 				}
-			}
-
-			void ToBlitSpace(Bounds bounds, out int minX, out int minY, out int maxX, out int maxY)
-			{
-				var m = bounds.min;
-				var M = bounds.max;
-				var invPixelSize = 1f / pixelSize;
-				minX = Mathf.FloorToInt(m.x * invPixelSize);
-				minY = Mathf.FloorToInt(m.y * invPixelSize);
-				maxX = Mathf.FloorToInt(M.x * invPixelSize);
-				maxY = Mathf.FloorToInt(M.y * invPixelSize);
 			}
 
 			public void Blit(SpriteRenderer spr)
@@ -149,12 +148,14 @@ namespace x600d1dea.scene
 
 				// bounds
 				var bounds = MUtils.GetBounds(verts);
-				int minX, minY, maxX, maxY;
-				ToBlitSpace(bounds, out minX, out minY, out maxX, out maxY);
+				int minX = Mathf.FloorToInt(bounds.min.x);
+				int minY = Mathf.FloorToInt(bounds.min.x);
+				int maxX = Mathf.CeilToInt(bounds.max.x);
+				int maxY = Mathf.CeilToInt(bounds.max.x);
 
 				// blit buffer
-				int w = maxX - minX + 1;
-				int h = maxY - minY + 1;
+				int w = maxX - minX;
+				int h = maxY - minY;
 				pixels = new Pixel[w * h];
 
 				var uv = sp.uv;
