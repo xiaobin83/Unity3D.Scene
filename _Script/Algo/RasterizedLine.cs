@@ -68,10 +68,10 @@ namespace x600d1dea.scene.algo
 		// Bresenham's line algorithm
 		IEnumerator<Pixel> Rasterize()
 		{
-			float x0 = start.x; 
-			float y0 = start.y;
-			float x1 = end.x;
-			float y1 = end.y;
+			int x0 = Mathf.RoundToInt(start.x);
+			int y0 = Mathf.RoundToInt(start.y);
+			int x1 = Mathf.RoundToInt(end.x);
+			int y1 = Mathf.RoundToInt(end.y);
 
 			bool steep = Mathf.Abs(y1 - y0) > Mathf.Abs(x1 - x0);
 			if (steep)
@@ -79,81 +79,57 @@ namespace x600d1dea.scene.algo
 				MUtils.Swap(ref x0, ref y0);
 				MUtils.Swap(ref x1, ref y1);
 			}
-			if (x0 > x1)
+			if (x1 < x0)
 			{
 				MUtils.Swap(ref x0, ref x1);
 				MUtils.Swap(ref y0, ref y1);
 			}
 
-			float dx = x1 - x0;
-			float dy = y1 - y0;
-			float errDelta;
-			if (dx == 0)
+			int dy = y1 - y0;
+			int dx = x1 - x0;
+			int yi = 1;
+			if (dy < 0)
 			{
-				if (steep)
+				yi = -1;
+				dy = -dy;
+			}
+			int D = 2*dy - dx;
+			int y = y0;
+
+			if (steep)
+			{
+				for (int x = x0; x <= x1; ++x)
 				{
 					yield return new Pixel()
 					{
-						x = Mathf.FloorToInt(y0),
-						y = Mathf.FloorToInt(x0),
+						x = y, y = x, c = 1f,
 					};
-				}
-				else
-				{
-					yield return new Pixel()
+					if (D > 0)
 					{
-						x = Mathf.FloorToInt(x0),
-						y = Mathf.FloorToInt(y0),
-					};
+						y = y + yi;
+						D = D - 2*dx;
+					}
+					D = D + 2*dy;
 				}
-				yield break;
 			}
 			else
 			{
-				errDelta = Mathf.Abs(dy / dx);
-				int yDir = (int)Mathf.Sign(dy);
-
-				float err = 0f;
-				int y = Mathf.RoundToInt(y0);
-				int xstart = Mathf.RoundToInt(x0);
-				int xend = Mathf.RoundToInt(x1);
-
-				if (steep)
+				for (int x = x0; x <= x1; ++x)
 				{
-					for (int x = xstart; x <= xend; ++x) 
+					yield return new Pixel()
 					{
-						yield return new Pixel()
-						{
-							x = y,
-							y = x,
-						};
-						err += errDelta;
-						if (err >= 0.5f)
-						{
-							y += yDir;
-							err -= 1f;
-						}
-					}
-				}
-				else
-				{
-					for (int x = xstart; x <= xend; ++x) 
+						x = x, y = y, c = 1f,
+					};
+					if (D > 0)
 					{
-						yield return new Pixel()
-						{
-							x = x,
-							y = y,
-						};
-						err += errDelta;
-						if (err >= 0.5f)
-						{
-							y += yDir;
-							err -= 1f;
-						}
+						y = y + yi;
+						D = D - 2*dx;
 					}
+					D = D + 2*dy;
 				}
 			}
 		}
+
 
 
 		// integer part of x
@@ -178,171 +154,10 @@ namespace x600d1dea.scene.algo
 			return 1f - FPart(x);
 		}
 
-
-		// Xiaolin Wu's line algorithm
-		IEnumerator<Pixel> RasterizeAA()
-		{
-			float x0 = start.x;
-			float y0 = start.y;
-			float x1 = end.x;
-			float y1 = end.y;
-
-			bool steep = Mathf.Abs(y1 - y0) > Mathf.Abs(x1 - x0);
-			if (steep)
-			{
-				MUtils.Swap(ref x0, ref y0);
-				MUtils.Swap(ref x1, ref y1);
-			}
-			if (x0 > x1)
-			{
-				MUtils.Swap(ref x0, ref x1);
-				MUtils.Swap(ref y0, ref y1);
-			}
-
-			float dx = x1 - x0;
-			float dy = y1 - y0;
-			float gradient;
-			if (dx == 0)
-			{
-				gradient = 1;
-			}
-			else
-			{
-				gradient = dy / dx;
-			}
-
-			var xend = Mathf.Round(x0);
-			var yend = y0 + gradient * (xend - x0);
-			var xgap = RFPart(x0 + 0.5f);
-			int xpxl1 = (int)xend; // this will be used in the main loop
-			int ypxl1 = (int)IPart(yend);
-			if (steep)
-			{
-				yield return new Pixel()
-				{
-					x = ypxl1,
-					y = xpxl1,
-					c = RFPart(yend) * xgap,
-				};
-
-				yield return new Pixel()
-				{
-					x = ypxl1 + 1,
-					y = xpxl1,
-					c = FPart(yend) * xgap,
-				};
-			}
-			else
-			{
-				yield return new Pixel()
-				{
-					x = xpxl1,
-					y = ypxl1,
-					c = RFPart(yend)*xgap,
-				};
-
-				yield return new Pixel()
-				{
-					x = xpxl1,
-					y = ypxl1 + 1,
-					c = FPart(yend) * xgap,
-
-				};
-			}
-			var intery = yend + gradient; // first y-intersection for the main loop
-
-			// handle second endpoint
-			xend = Round(x1);
-		    yend = y1 + gradient * (xend - x1);
-		    xgap = FPart(x1 + 0.5f);
-		    int xpxl2 = (int)xend; //this will be used in the main loop
-			int ypxl2 = (int)IPart(yend);
-			if (steep)
-			{
-				yield return new Pixel()
-				{
-					x = ypxl2,
-					y = xpxl2,
-					c = RFPart(yend) * xgap,
-				};
-
-				yield return new Pixel()
-				{
-					x = ypxl2 + 1,
-					y = xpxl2,
-					c = RFPart(yend) * xgap,
-				};
-			}
-			else
-			{
-				yield return new Pixel()
-				{
-					x = xpxl2,
-					y = xpxl2 + 1,
-					c = FPart(yend) * xgap,
-				};
-
-				yield return new Pixel()
-				{
-					x = xpxl2,
-					y = ypxl2,
-					c = RFPart(yend) * xgap,
-				};
-			}
-
-
-			// main loop
-			if (steep)
-			{
-				for (int x = xpxl1 + 1; x <= xpxl2 - 1; ++x)
-				{
-					yield return new Pixel()
-					{
-						x = (int)IPart(intery),
-						y = x,
-						c = RFPart(intery),
-					};
-
-					yield return new Pixel()
-					{
-						x = (int)IPart(intery)+1,
-						y = x,
-						c = FPart(intery),
-					};
-					intery += gradient;
-				}
-			}
-			else
-			{
-				for (int x = xpxl1 + 1; x <= xpxl2 - 1; ++x)
-				{
-					yield return new Pixel()
-					{
-						x = x,
-						y = (int)IPart(intery),
-						c = RFPart(intery),
-					};
-					yield return new Pixel()
-					{
-						x = x,
-						y = (int)IPart(intery) + 1,
-						c = FPart(intery),
-					};
-					intery += gradient;
-				}
-			}
-		}
-
 		public PixelIterator CreatePixelIterator()
 		{
 			return new PixelIterator(Rasterize());
 		}
-
-		public PixelIterator CreatePixelIteratorAA()
-		{
-			return new PixelIterator(RasterizeAA());
-		}
-
 
 	}
 }
