@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace x600d1dea.scene
+namespace x600d1dea.scene.algo
 {
+	using stubs.collections;
+	using stubs.utils;
+
 	public static class Rasterizer2D 
 	{
 		public delegate void PlotDelegate(Vector2 point, Vector2 uv);
@@ -16,7 +19,6 @@ namespace x600d1dea.scene
 				Vector2 uv;
 			}
 
-			
 			float pixelSize = 1;
 
 			public Target(float pixelSize)
@@ -24,9 +26,9 @@ namespace x600d1dea.scene
 				this.pixelSize = pixelSize;
 			}
 
-			static bool NextY(algo.RasterizedLine.PixelIterator iter, int y, out int x0, out int y0)
+			static bool NextY(RasterizedLine.PixelIterator iter, int y, out int x0, out int y0)
 			{
-				algo.RasterizedLine.Pixel p;
+				RasterizedLine.Pixel p;
 				while (iter.Next(out p))
 				{
 					if (y != p.y)
@@ -41,9 +43,9 @@ namespace x600d1dea.scene
 				return false;
 			}
 
-			static bool FindY(algo.RasterizedLine.PixelIterator iter, int y, out int x0)
+			static bool FindY(RasterizedLine.PixelIterator iter, int y, out int x0)
 			{
-				algo.RasterizedLine.Pixel p;
+				RasterizedLine.Pixel p;
 				while (iter.Next(out p))
 				{
 					if (p.y == y)
@@ -68,7 +70,7 @@ namespace x600d1dea.scene
 				if (v1.x > v2.x)
 					MUtils.Swap(ref v1, ref v2);
 
-				var L1 = new algo.RasterizedLine(v1, v0);
+				var L1 = new RasterizedLine(v1, v0);
 				var i1 = L1.CreatePixelIterator();
 				int y0 = int.MinValue;
 				int x0;
@@ -90,23 +92,23 @@ namespace x600d1dea.scene
 				}
 			}
 
-			static void CacheYOnChanged(algo.RasterizedLine.PixelIterator iter, List<algo.RasterizedLine.Pixel> list)
+			static void CacheYOnChanged(RasterizedLine.PixelIterator iter, Array<RasterizedLine.Pixel> list)
 			{
-				algo.RasterizedLine.Pixel p;
+				RasterizedLine.Pixel p;
 				int y = int.MaxValue;
 				while (iter.Next(out p))
 				{
 					if (y != p.y)
 					{
-						list.Add(p);
+						list.Push(p);
 						y = p.y;
 					}
 				}
 			}
 
-			static bool CheckSequence(List<algo.RasterizedLine.Pixel> list1, List<algo.RasterizedLine.Pixel> list2)
+			static bool CheckSequence(Array<RasterizedLine.Pixel> list1, Array<RasterizedLine.Pixel> list2)
 			{
-				if (list1.Count > 1)
+				if (list1.length > 1)
 				{
 					return ((list1[0].y > list1[1].y) && (list2[0].y > list2[1].y))
 						|| ((list1[0].y < list1[1].y) && (list2[0].y < list2[1].y));
@@ -125,23 +127,23 @@ namespace x600d1dea.scene
 				if (v0.x > v1.x)
 					MUtils.Swap(ref v0, ref v1);
 
-				var L1 = new algo.RasterizedLine(v0, v2);
-				var L2 = new algo.RasterizedLine(v1, v2);
+				var L1 = new RasterizedLine(v0, v2);
+				var L2 = new RasterizedLine(v1, v2);
 				var i1 = L1.CreatePixelIterator();
 				var i2 = L2.CreatePixelIterator();
 
 				Vector2 newUv0 = Vector2.zero;
 				Vector3 newUv1 = Vector2.zero;
 
-				var pList1 = stubs.utils.ListPool<algo.RasterizedLine.Pixel>.Get();
-				var pList2 = stubs.utils.ListPool<algo.RasterizedLine.Pixel>.Get();
+				var pList1 = ArrayPool<RasterizedLine.Pixel>.Get();
+				var pList2 = ArrayPool<RasterizedLine.Pixel>.Get();
 
 				CacheYOnChanged(i1, pList1);
 				CacheYOnChanged(i2, pList2);
 				
 				if (CheckSequence(pList1, pList2))
 				{
-					for (int i = 0; i < pList1.Count; ++i)
+					for (int i = 0; i < pList1.length; ++i)
 					{
 						var a = pList1[i];
 						var b = pList2[i];
@@ -150,15 +152,15 @@ namespace x600d1dea.scene
 				}
 				else
 				{
-					for (int i = 0; i < pList1.Count; ++i)
+					for (int i = 0; i < pList1.length; ++i)
 					{
 						var a = pList1[i];
-						var b = pList2[pList2.Count - 1 - i];
+						var b = pList2[-i-1];
 						BlitHorizontalLine(a.x, b.x, a.y, newUv0, newUv1, plotDelegate);
 					}
 				}
-				stubs.utils.ListPool<algo.RasterizedLine.Pixel>.Release(pList1);
-				stubs.utils.ListPool<algo.RasterizedLine.Pixel>.Release(pList2);
+				ArrayPool<RasterizedLine.Pixel>.Release(pList1);
+				ArrayPool<RasterizedLine.Pixel>.Release(pList2);
 			}
 
 			void BlitHorizontalLine(int x0, int x1, int y, Vector2 uv0, Vector2 uv1, PlotDelegate plotDelegate)
@@ -236,17 +238,14 @@ namespace x600d1dea.scene
 				var uv2 = uv[i2];
 				if (v0.y == v1.y)
 				{
-					Gizmos.color = Color.blue;
 					BlitTriangle(v0, v1, v2, uv0, uv1, uv2, plotDelegate);
 				}
 				else if (v1.y == v2.y)
 				{
-					Gizmos.color = Color.red;
 					BlitTriangle(v1, v2, v0, uv1, uv2, uv0, plotDelegate);
 				}
 				else
 				{
-					Gizmos.color = Color.yellow;
 					var y = v1.y;
 					var x = v0.x - (v0.y - y)/(v0.y - v2.y)*(v0.x - v2.x);
 					var v3 = new Vector2(x, y);
@@ -298,7 +297,7 @@ namespace x600d1dea.scene
 
 		public static Target CreateTarget(float pixelSize = 1)
 		{
-			Debug.Assert(pixelSize >= 1);
+			Debug.Assert(pixelSize > 0);
 			return new Target(pixelSize);
 		}
 
